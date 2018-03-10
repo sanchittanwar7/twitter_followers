@@ -17,45 +17,55 @@ export default class App extends Component {
 			if(err)
 				console.log("err in getting followers : ", err)
 			else{
-				console.log("got the followers")
-				this.setState({followers: res})
+				console.log("got the followers", res.length)
+				Meteor.call("user.insert", this.state.query, res, res.length, (err, res) => {
+					if(err)
+						console.log(err)
+					else{
+						console.log("user inserted", res)
+						this.setState({followers: res})
+					}
+				})
 			}
 		})
 	}
 
 	render() {
 		return(
+			<div>
 			<FormGroup>
-				<InputGroup>
-					<FormControl
-					type = "text"
-					placeholder = "Search for an person"
-					value = {this.state.query}
-					onChange = {event => {this.setState({query: event.target.value});}}
-					onKeyPress = { event => {
-						if(event.key === 'Enter'){
-							this.search();
-						}
-					}}
-					/>
-					<InputGroup.Addon className =  "searchButton" onClick = {() => this.search()}>
-						<Glyphicon glyph = "search"></Glyphicon>
-					</InputGroup.Addon>
-				</InputGroup>
+			<InputGroup>
+			<FormControl
+			type = "text"
+			placeholder = "Search for an person"
+			value = {this.state.query}
+			onChange = {event => {this.setState({query: event.target.value});}}
+			onKeyPress = { event => {
+				if(event.key === 'Enter'){
+					this.search();
+				}
+			}}
+			/>
+			<InputGroup.Addon className =  "searchButton" onClick = {() => this.search()}>
+			<Glyphicon glyph = "search"></Glyphicon>
+			</InputGroup.Addon>
+			</InputGroup>
 			</FormGroup>
 			{
-				this.followers !== null ?
+				this.state.followers !== null ?
 				<Table
-					followers: {this.state.followers}
+				followers = {this.state.followers}
 				/>
-				: <div></div>
+				: 
+				<div></div>
 			}
-		)
+			</div>
+			)
 	}
 
 }
 
 
 Meteor.startup(() => {
-	ReactDOM.render(<App />, docuent.querySelector('.render-target'))
+	ReactDOM.render(<App />, document.querySelector('.render-target'))
 })
