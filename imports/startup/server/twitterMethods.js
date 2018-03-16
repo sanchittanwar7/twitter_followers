@@ -11,7 +11,7 @@ Meteor.methods({
 		try{
 			while(count < 400){
 				let data = await appConfig.get('followers/list', { screen_name: screen_name , count : 200 ,cursor : next_cursor} );
-				console.log(data.data)
+				// console.log(data.data)
 				if(data.data.users){	
 					data.data.users.forEach(function(user){
 						followers.push(user)
